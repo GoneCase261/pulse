@@ -1,0 +1,10 @@
+opencv-python
+numpy
+python-dotenv
+ultralytics
+librosa
+groq
+elevenlabs
+moviepy
+pydub
+streamlit

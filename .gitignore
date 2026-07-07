@@ -1,0 +1,29 @@
+__pycache__/
+*.py[cod]
+*.pyo
+
+venv/
+.venv/
+
+.env
+
+# Generated files
+output/*
+!output/.gitkeep
+
+project_overview.md
+
+# Input videos
+data/*
+!data/.gitkeep
+
+yolov8*.pt
+
+.vscode/
+.idea/
+
+*.log
+logs/
+
+.DS_Store
+Thumbs.db
