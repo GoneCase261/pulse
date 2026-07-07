@@ -60,9 +60,10 @@ def orchestrate(video_path, audio_manifest_path, scores_path, output_path, lead_
 
     # chunk-based music bed
     music_bed = build_chunked_music_bed(scores, duration_ms)
+    print(f"[Pulse] Music bed built — {len(music_bed) / 1000:.1f}s")
 
     # Lower music volume and overlay on game audio
-    music_bed -= 10
+    music_bed -= 0
     final_mix = game_audio.overlay(music_bed)
 
     # Load commentary manifest
@@ -83,7 +84,14 @@ def orchestrate(video_path, audio_manifest_path, scores_path, output_path, lead_
 
         # if previous clip hasn't finished, delay until it has
         if position_ms < prev_clip_end_ms:
-            position_ms = prev_clip_end_ms+2
+            is_real_event = entry.get("event") in (
+                "goal", "near_miss", "crowd_spike")
+            if is_real_event:
+                position_ms = prev_clip_end_ms + 3
+            else:
+                print(
+                    f"[Pulse] Skipping t={entry['timestamp']}s — no real event, would overlap")
+                continue
 
         audio_path = os.path.normpath(entry["audio_path"])
         clip = AudioSegment.from_mp3(audio_path)

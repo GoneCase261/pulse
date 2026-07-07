@@ -8,13 +8,13 @@ def detect_audio_shape(video_path):
     Analyses crowd audio energy per second.
     Returns events (goal/near_miss) AND full energy timeline.
     """
-    import warnings
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
         audio, sr = librosa.load(video_path, sr=None, mono=True)
 
     chunk_size = sr
-    num_chunks = len(audio) // chunk_size
+    # ceil to include last partial second
+    num_chunks = int(np.ceil(len(audio) / chunk_size))
 
     energies = []
     for i in range(num_chunks):
@@ -27,6 +27,7 @@ def detect_audio_shape(video_path):
 
     avg_energy = sum(energies) / len(energies)
     max_energy = max(energies)
+    # lowered from 1.4 to catch saves and near misses
     spike_threshold = avg_energy * 1.4
 
     # Normalise energy timeline 0-1 for use in scorer
@@ -68,4 +69,5 @@ def detect_audio_shape(video_path):
         else:
             i += 1
 
+    print(f"[Pulse] Audio events detected: {len(events)}")
     return events, energy_timeline

@@ -46,7 +46,10 @@ def fit_music_to_duration(track, duration_ms):
     return track[:duration_ms]
 
 
-def apply_fade(track, fade_ms=3000):
+def apply_fade(track, fade_ms=None):
+
+    if fade_ms is None:
+        fade_ms = min(1500, len(track)//4)
     return track.fade_in(fade_ms).fade_out(fade_ms)
 
 

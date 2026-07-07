@@ -61,13 +61,16 @@ def combine_signals(audio_events, net_motion_events, window=3.0):
                 })
 
     # Net motion with no audio match = near miss, never goal
-    for i, motion in enumerate(net_motion_events):
-        if i not in used_motion:
-            final_events.append({
-                "timestamp": motion["timestamp"],
-                "event": "near_miss",
-                "confidence": 0.45,
-                "source": "vision_only"
-            })
+    # for i, motion in enumerate(net_motion_events):
+    #     if i not in used_motion:
+    #         final_events.append({
+    #             "timestamp": motion["timestamp"],
+    #             "event": "near_miss",
+    #             "confidence": 0.45,
+    #             "source": "vision_only"
+    #         })
 
-    return sorted(final_events, key=lambda x: x["timestamp"])
+    return sorted(
+        [e for e in final_events if e["confidence"] >= 0.5],
+        key=lambda x: x["timestamp"]
+    )

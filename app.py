@@ -98,12 +98,15 @@ if __name__ == "__main__":
     save_scores(scored)
 
   # generate commentary
+    clip_duration = metadata["duration_sec"]
+
+    n_highlights = max(3, int(clip_duration/15))
     print("\n[Pulse] Generating commentary for top moments...")
     commentary_results = generate_commentary_for_highlights(
         scored_frames=scored,
         sport_config=config,
         events=events,
-        n=10
+        n=n_highlights
     )
 
     with open("output/commentary.json", "w", encoding="utf-8") as f:

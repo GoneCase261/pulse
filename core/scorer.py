@@ -58,7 +58,7 @@ def calculate_intensity(frame_analysis, intensity_weights, max_counts,
     # Event boost
     score += event_boost
 
-    return round(min(score * 10, 10.0), 1)
+    return score
 
 
 def score_all_frames(analysis_path, intensity_weights, max_counts,
