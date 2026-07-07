@@ -1,239 +1,159 @@
 ⚽ Pulse
 
-AI-powered sports highlight generation using computer vision, audio analysis, and LLM-generated commentary.
+AI-powered sports highlight generation using computer vision, audio analysis, and large language models.
 
-Pulse analyzes a sports video, detects important moments by combining multiple signals, scores the intensity of play, generates contextual commentary, synthesizes speech, and produces a final highlight video with commentary and background music.
+Pulse analyzes a sports video, detects important moments by combining visual and audio signals, generates contextual commentary, synthesizes speech, and produces a final highlight video with synchronized commentary and background music.
 
 🎥 Demo
-Before:
+Input Video
+
+Raw football match footage.
 
 
-https://github.com/user-attachments/assets/d9fa4b62-51ae-4dda-abe3-9670ac0fe3e0
+
+https://github.com/user-attachments/assets/78556c16-4b27-45b5-ba4f-f4842ccfe92e
 
 
 
-After:
+Output Video
+
+Pulse-generated highlight with AI commentary, speech synthesis, and dynamic background music.
 
 
-https://github.com/user-attachments/assets/b4c0dd75-e9e7-493b-9b71-fef78c444407
+
+https://github.com/user-attachments/assets/1c88e62d-c36c-4634-9a76-348a318a1f61
 
 
-🧠 What it does
 
-Instead of relying on a single cue, Pulse combines information from multiple sources to estimate when important moments happen.
 
-The pipeline includes:
-
-Frame extraction from the source video
-
-Object detection using YOLO
-
-Motion analysis
-
-Crowd energy analysis from audio
-
-Goal and near-miss detection through multi-signal fusion
-
-Frame intensity scoring
-
-LLM-generated sports commentary
-
-Speech synthesis using ElevenLabs
-
-Background music selection based on match intensity
-
-Audio/video synchronization to produce the final output
-
+✨ Features
+Multi-signal sports event detection
+YOLO-based player and ball detection
+Crowd energy analysis from match audio
+Motion and zoom detection
+Event fusion using audio and visual cues
+Intensity scoring for every frame
+AI-generated contextual sports commentary
+ElevenLabs voice synthesis
+Dynamic background music based on game intensity
+Automatic synchronization of commentary, music, and gameplay
 ⚙️ Tech Stack
-
-Languages
-
+Programming Language
 Python
-
 Computer Vision
-
 YOLOv8
-
 OpenCV
-
 Audio Processing
-
 Librosa
 PyDub
-
 AI
-
 Groq API (Llama 3.1 8B Instant)
-
 ElevenLabs Text-to-Speech
-
 Video Processing
-
 MoviePy
-
 Configuration
-
-JSON-based sport configurations
-
-📊 Pipeline
-
-Video
-
-↓
-
-Extract Frames
-
-↓
-
-YOLO Detection + Motion Analysis
-
-↓
-
-Crowd Audio Analysis
-
-↓
-
-Multi-signal Event Detection
-
-↓
-
-Frame Intensity Scoring
-
-↓
-
-Highlight Selection
-
-↓
-
-LLM Commentary Generation
-
-↓
-
-Speech Synthesis
-
-↓
-
-Background Music Generation
-
-↓
-
-Audio Synchronization
-
-↓
-
-Final Highlight Video
-
+JSON-based sport configuration system
+📊 Execution Pipeline
+Input Video
+      │
+      ▼
+Frame Extraction
+      │
+      ▼
+YOLO Object Detection
+      │
+      ├──────────────┐
+      ▼              ▼
+Motion Analysis   Crowd Audio Analysis
+      │              │
+      └──────┬───────┘
+             ▼
+     Event Detection
+             │
+             ▼
+     Frame Intensity Scoring
+             │
+             ▼
+     Highlight Selection
+             │
+             ▼
+  AI Commentary Generation
+             │
+             ▼
+   Speech Synthesis (TTS)
+             │
+             ▼
+ Dynamic Background Music
+             │
+             ▼
+ Audio / Video Synchronization
+             │
+             ▼
+      Final Highlight Video
 📁 Project Structure
 Pulse/
-
 ├── app.py
-
-├── core/
-
-│   ├── commentary.py
-
-│   ├── detector.py
-
-│   ├── extractor.py
-
-│   ├── music.py
-
-│   ├── scorer.py
-
-│   ├── sync.py
-
-│   ├── speech.py
-
-│   ├── config_loader.py
-
-│   └── events/
-
-│       ├── __init__.py
-
-│       ├── audio.py
-
-│       ├── fusion.py
-
-│       ├── manager.py
-
-│       ├── vision.py
-
-│       └── zoom.py
-
 ├── configs/
-
 │   └── football.json
-
+├── core/
+│   ├── commentary.py
+│   ├── config_loader.py
+│   ├── detector.py
+│   ├── extractor.py
+│   ├── music.py
+│   ├── scorer.py
+│   ├── speech.py
+│   ├── sync.py
+│   └── events/
+│       ├── __init__.py
+│       ├── audio.py
+│       ├── fusion.py
+│       ├── manager.py
+│       ├── vision.py
+│       └── zoom.py
 ├── data/
-
 ├── music/
-
 ├── output/
-
 ├── requirements.txt
-
 ├── .env.example
-
 ├── .gitignore
-
 └── README.md
-
 🚀 Getting Started
-
 1. Clone the repository
-git clone <repository-url>
+git clone https://github.com/<your-username>/Pulse.git
 cd Pulse
-
 2. Install dependencies
 pip install -r requirements.txt
 3. Install FFmpeg
 
-MoviePy and PyDub require FFmpeg to be installed and available in your system PATH.
+Pulse uses MoviePy and PyDub, both of which require FFmpeg to be installed and accessible through your system PATH.
 
 4. Configure environment variables
 
-Create a .env file.
+Create a .env file in the project root.
 
-GROQ_API_KEY=your_key
-
-ELEVENLABS_API_KEY=your_key
-
+GROQ_API_KEY=your_groq_api_key
+ELEVENLABS_API_KEY=your_elevenlabs_api_key
 ELEVENLABS_VOICE_ID=your_voice_id
+5. Add an input video
 
-5. Add a video
+Place the input video inside the data/ directory.
 
-Place the input video inside the data/ folder.
-
-6. Run
-
+6. Run Pulse
 python app.py
 
-The generated highlight video will be saved inside:
+The generated highlight video will be saved to:
 
 output/final_output.mp4
-
-📝 Limitations
-
-Event detection combines audio and visual signals instead of relying on a single detector.
-
-Commentary is generated from the detected game situation rather than using fixed templates.
-
-Different sports can be supported by adding new configuration files.
-
-Detection quality depends on the video angle, crowd audio, and object visibility.
-
-Commentary timing is approximate and may lag the actual event by a small amount in the current version.
-
+⚠️ Limitations
+Event detection currently combines handcrafted audio and vision signals rather than learned event detection models.
+Detection accuracy depends on factors such as camera angle, crowd audio quality, video resolution, and object visibility.
+The current implementation is optimized for football, with additional sports intended to be supported through configurable pipelines.
 🔮 Future Improvements
-
-Additional sports support
-
+Support for additional sports
 Player and team recognition
-
-Better commentary timing alignment
-
+Improved event detection using learned models
+More natural commentary generation
 Multi-language commentary
-
-Streaming/live match support
-
-Learned event detection models instead of rule-based signal fusion
+Live match and streaming support
+Interactive highlight customization
