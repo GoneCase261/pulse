@@ -16,10 +16,6 @@ if not VOICE_ID:
 
 
 def synthesise_speech(text, output_path, intensity=5.0):
-    """
-    Convert text to speech using ElevenLabs.
-    Voice settings shift based on intensity.
-    """
 
     url = f"{ELEVENLABS_API_URL}/{VOICE_ID}"
 
@@ -58,10 +54,6 @@ def synthesise_speech(text, output_path, intensity=5.0):
 
 
 def synthesise_all_commentary(commentary_results, output_dir="output/audio"):
-    """
-    Convert all commentary lines to audio files.
-    Passes intensity to voice synthesiser for dynamic voice settings.
-    """
     os.makedirs(output_dir, exist_ok=True)
     audio_results = []
 

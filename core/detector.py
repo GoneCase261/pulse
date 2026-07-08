@@ -31,6 +31,7 @@ def calculate_motion_score(frame_a, frame_b):
 
 
 def detect_objects(frame, model, target_classes, confidence_threshold=0.4):
+    # personal notes
     """
     Runs on each single frame.
     Detects objects only specified in target_classes.

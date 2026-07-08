@@ -1,10 +1,9 @@
 def combine_signals(audio_events, net_motion_events, window=3.0):
-    """
-    Votes across audio and net motion signals.
-    Goal requires sustained audio (4+ seconds) — no exceptions.
-    Net motion + quick audio = near miss only.
-    Net motion alone = near miss only.
-    """
+
+    # votes across audio and net motion signals.
+    # goal requires sustained audio (4+ seconds) — no exceptions.
+    # net motion + quick audio = near miss only.
+    # net motion alone = near miss only.
     final_events = []
     used_motion = set()
 
@@ -24,7 +23,6 @@ def combine_signals(audio_events, net_motion_events, window=3.0):
             used_motion.add(motion_idx)
 
             if audio_event["event"] == "goal_audio" and sustained >= 4:
-                # Both agree AND audio sustained = confirmed goal
                 final_events.append({
                     "timestamp": at,
                     "event": "goal",
@@ -42,7 +40,6 @@ def combine_signals(audio_events, net_motion_events, window=3.0):
                     "sustained_seconds": sustained
                 })
         else:
-            # Audio only
             if audio_event["event"] == "goal_audio" and sustained >= 4:
                 final_events.append({
                     "timestamp": at,

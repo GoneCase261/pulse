@@ -153,18 +153,17 @@ def generate_commentary_for_highlights(scored_frames, sport_config, events=None,
 
     selected = []
     selected_timestamps = set()
-    last_ts = -999  # single variable used throughout all steps
+    last_ts = -999
 
     clip_duration = scored_frames[-1]["timestamp"]
     base_gap = 5.0
-    end_zone = clip_duration * 0.3  # last 30% of clip gets tighter gap
+    end_zone = clip_duration * 0.3
 
     def dynamic_gap(timestamp):
-        # Shrink gap requirement in last 20% of clip
+        # shrink gap requirement in last 20% of clip
         time_remaining = clip_duration - timestamp
         return 3.0 if time_remaining < end_zone else base_gap
 
-    # Step 1 — goals always make it in, no gap check, no time guard
     for goal in [e for e in events if e["event"] == "goal" and e["confidence"] >= 0.7]:
         closest = min(scored_frames, key=lambda f: abs(
             f["timestamp"] - goal["timestamp"]))
@@ -173,7 +172,7 @@ def generate_commentary_for_highlights(scored_frames, sport_config, events=None,
             selected_timestamps.add(closest["timestamp"])
             last_ts = closest["timestamp"]
 
-    # Step 2 — near misses: dynamic gap + skip first 2 seconds
+    # near misses: dynamic gap + skip first 2 seconds
     for nm in [e for e in events if e["event"] == "near_miss" and e["confidence"] >= 0.6]:
         closest = min(scored_frames, key=lambda f: abs(
             f["timestamp"] - nm["timestamp"]))
@@ -186,7 +185,7 @@ def generate_commentary_for_highlights(scored_frames, sport_config, events=None,
             selected_timestamps.add(closest["timestamp"])
             last_ts = closest["timestamp"]
 
-    # Step 3 — fill remaining slots from intensity buckets
+    # fill remaining slots from intensity buckets
     remaining = n - len(selected)
     if remaining > 0 and scored_frames:
         bucket_size = clip_duration / remaining
@@ -197,7 +196,6 @@ def generate_commentary_for_highlights(scored_frames, sport_config, events=None,
 
             candidates = [
                 f for f in scored_frames
-                # <= to catch last frame
                 if bucket_start <= f["timestamp"] <= bucket_end
                 and f["timestamp"] not in selected_timestamps
                 and f["intensity"] >= 5.0
@@ -213,10 +211,8 @@ def generate_commentary_for_highlights(scored_frames, sport_config, events=None,
                     selected_timestamps.add(best["timestamp"])
                     last_ts = best["timestamp"]
 
-    # Step 4 — sort chronologically
     selected = sorted(selected, key=lambda x: x[0]["timestamp"])
 
-    # Step 5 — final gap filter with dynamic gap (catches anything that slipped through)
     filtered = []
     last_ts = -999
     for frame, event in selected:
@@ -224,7 +220,6 @@ def generate_commentary_for_highlights(scored_frames, sport_config, events=None,
             filtered.append((frame, event))
             last_ts = frame["timestamp"]
 
-    # Step 6 — generate commentary
     results = []
     for frame, event in filtered:
         etype = event["event"] if event else None

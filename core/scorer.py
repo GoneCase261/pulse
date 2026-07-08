@@ -4,7 +4,6 @@ import os
 
 def find_event_boost(timestamp, events, event_weights, window=2.0):
 
-    # Find the highest-weight event near this timestamp and return its boost value.
     nearby = [
         e for e in events
         if abs(e["timestamp"] - timestamp) <= window
@@ -17,10 +16,6 @@ def find_event_boost(timestamp, events, event_weights, window=2.0):
 
 
 def normalise_scores(scored_frames):
-    """
-    Min-max normalise intensity scores across all frames to 0-10 range.
-    Skips normalisation if all frames have the same intensity.
-    """
     intensities = [f["intensity"] for f in scored_frames]
     min_i = min(intensities)
     max_i = max(intensities)
@@ -41,21 +36,17 @@ def calculate_intensity(frame_analysis, intensity_weights, max_counts,
                         event_boost=0.0, crowd_energy=0.0):
     score = 0.0
 
-    # Motion
     motion = frame_analysis["motion_score"] / 100.0
     score += motion * intensity_weights.get("motion", 0)
 
-    # Detections
     for obj, data in frame_analysis["detections"].items():
         count = data["count"]
         max_c = max_counts.get(obj, 10)
         normalised = min(1.0, count / max_c)
         score += normalised * intensity_weights.get(obj, 0)
 
-    # Crowd energy
     score += crowd_energy * intensity_weights.get("crowd", 0.3)
 
-    # Event boost
     score += event_boost
 
     return score
@@ -73,7 +64,6 @@ def score_all_frames(analysis_path, intensity_weights, max_counts,
     if event_weights is None:
         event_weights = {}
 
-    # Load crowd energy timeline
     crowd_energy_map = {}
     if os.path.exists(crowd_energy_path):
         with open(crowd_energy_path, "r", encoding="utf-8") as f:

@@ -21,11 +21,9 @@ def detect_events(analysis_path, video_path, sport_config, frames_dir="output/fr
         config_zones = sport_config.get("goal_zones", [])
         goal_zone = config_zones[0] if config_zones else None
 
-    # Audio analysis-returns events AND energy timeline
     audio_events, energy_timeline = detect_audio_shape(video_path)
     print(f"[Pulse] Audio events detected: {len(audio_events)}")
 
-    # Save crowd energy timeline for scorer
     energy_path = "output/crowd_energy.json"
     os.makedirs("output", exist_ok=True)
     with open(energy_path, "w", encoding="utf-8") as f:
@@ -33,7 +31,6 @@ def detect_events(analysis_path, video_path, sport_config, frames_dir="output/fr
     print(
         f"[Pulse] Crowd energy timeline saved — {len(energy_timeline)} seconds")
 
-    # Net motion
     net_motion_events = []
     if goal_zone:
         meta_path = os.path.join(frames_dir, "metadata.json")
